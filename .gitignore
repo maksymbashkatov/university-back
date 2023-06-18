@@ -1,0 +1,10 @@
+node_modules
+.env
+build
+.DS_Store
+.vscode
+!.gitkeep
+src/public/students/*
+!src/public/students/.gitkeep
+src/temp/*
+!src/temp/.gitkeep
