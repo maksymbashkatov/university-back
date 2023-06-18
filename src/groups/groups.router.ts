@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import controllerWrapper from '../utilities/controller-wrapper';
 import * as groupsController from './groups.controller';
-import validator from '../middlewares/validation.middleware';
-import { idParamSchema } from '../schemas/id-param.schema';
 import { groupCreateSchema, groupUpdateSchema } from './group.schema';
+import controllerWrapper from '../application/utilities/controller-wrapper';
+import validator from '../application/middlewares/validation.middleware';
+import { idParamSchema } from '../application/schemas/id-param.schema';
 
 const router = Router();
 

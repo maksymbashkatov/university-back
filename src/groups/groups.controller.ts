@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import * as groupsService from './groups.service';
 import { ValidatedRequest } from 'express-joi-validation';
 import { IGroupCreateRequest } from './types/group-create-request.interface';
-import { HttpStatuses } from '../enums/http-statuses.enum';
 import { IGroupUpdateRequest } from './types/group-update-request.interface';
+import { HttpStatuses } from '../application/enums/http-statuses.enum';
 
 export const getAllGroups = (request: Request, response: Response) => {
   response.json(groupsService.getAllGroups());

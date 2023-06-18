@@ -1,4 +1,3 @@
-// В этом файле создаётся объект сервера
 import express from 'express';
 import cors from 'cors';
 import logger from './middlewares/logger.middleware';
@@ -6,7 +5,7 @@ import studentsRouter from '../students/students.router';
 import bodyParser from 'body-parser';
 import exceptionFilter from './middlewares/exceptions.filter';
 import path from 'path';
-import groupsRouter from './groups/groups.router';
+import groupsRouter from '../groups/groups.router';
 
 const app = express();
 

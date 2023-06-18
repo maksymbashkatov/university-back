@@ -1,6 +1,6 @@
-import { getAllStudents } from '../../students/students.model';
-import { HttpStatuses } from '../enums/http-statuses.enum';
-import HttpException from '../exceptions/http-exception';
+import { HttpStatuses } from '../application/enums/http-statuses.enum';
+import HttpException from '../application/exceptions/http-exception';
+import { getAllStudents } from '../students/students.model';
 import * as groupsModel from './groups.model';
 import { IGroup } from './types/group.interface';
 

@@ -5,7 +5,7 @@ import * as studentsModel from './students.model';
 import { IStudent } from './types/student.interface';
 import path from 'path';
 import fs from 'fs/promises';
-import { getAllGroups } from '../application/groups/groups.model';
+import { getAllGroups } from '../groups/groups.model';
 
 export const getAllStudents = () => {
   const students = studentsModel.getAllStudents().map((student) => {
