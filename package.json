@@ -8,7 +8,13 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"{src}/**/*.ts\"",
     "start": "node ./build/indeex.js",
-    "start:dev": "nodemon src/index.ts"
+    "start:dev": "nodemon src/index.ts",
+    "typeorm": "NODE_OPTIONS='-r dotenv/config' typeorm-ts-node-commonjs",
+    "typeorm:config": "npm run typeorm -- -d src/configs/database/data-source.ts",
+    "migrations:create": "npm run typeorm migration:create src/database/migrations/%npm_config_name%",
+    "migrations:generate": "npm run typeorm:config migration:generate src/database/migrations/%npm_config_name%",
+    "migrations:run": "npm run typeorm:config migration:run",
+    "migrations:revert": "npm run typeorm:config migration:revert"
   },
   "author": "",
   "license": "ISC",
@@ -37,6 +43,9 @@
     "express": "^4.18.2",
     "express-joi-validation": "^5.0.1",
     "joi": "^17.9.2",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.11.1",
+    "typeorm": "^0.3.17",
+    "win-node-env": "^0.6.1"
   }
 }

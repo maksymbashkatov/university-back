@@ -6,12 +6,21 @@ import bodyParser from 'body-parser';
 import exceptionFilter from './middlewares/exceptions.filter';
 import path from 'path';
 import groupsRouter from '../groups/groups.router';
+import { AppDataSource } from '../configs/database/data-source';
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(logger);
+
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Typeorm connected to database');
+  })
+  .catch((error) => {
+    console.log('Error: ', error);
+  });
 
 const staticFilesPath = path.join(__dirname, '../', 'public');
 

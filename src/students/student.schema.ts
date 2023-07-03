@@ -7,7 +7,6 @@ export const studentCreateSchema = Joi.object<Omit<IStudent, 'id'>>({
   email: Joi.string().required(),
   age: Joi.number().required(),
   imagePath: Joi.string().optional(),
-  groupId: Joi.string().optional(),
 });
 
 export const studentUpdateSchema = Joi.object<Partial<IStudent>>({
@@ -16,9 +15,4 @@ export const studentUpdateSchema = Joi.object<Partial<IStudent>>({
   email: Joi.string().optional(),
   age: Joi.number().optional(),
   imagePath: Joi.string().optional(),
-  groupId: Joi.string().optional(),
-});
-
-export const studentGroupUpdateSchema = Joi.object<Partial<IStudent>>({
-  groupId: Joi.string().required(),
 });

@@ -7,12 +7,12 @@ import { idParamSchema } from '../application/schemas/id-param.schema';
 
 const router = Router();
 
-router.get('/', controllerWrapper(groupsController.getAllGroups));
-router.get(
-  '/:id',
-  validator.params(idParamSchema),
-  controllerWrapper(groupsController.getGroupById),
-);
+// router.get('/', controllerWrapper(groupsController.getAllGroups));
+// router.get(
+//   '/:id',
+//   validator.params(idParamSchema),
+//   controllerWrapper(groupsController.getGroupById),
+// );
 router.post(
   '/',
   validator.body(groupCreateSchema),

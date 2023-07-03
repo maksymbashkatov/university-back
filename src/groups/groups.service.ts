@@ -1,32 +1,31 @@
 import { HttpStatuses } from '../application/enums/http-statuses.enum';
 import HttpException from '../application/exceptions/http-exception';
-import { getAllStudents } from '../students/students.model';
 import * as groupsModel from './groups.model';
 import { IGroup } from './types/group.interface';
 
-export const getAllGroups = () => {
-  const groups = groupsModel.getAllGroups().map((group) => {
-    const studentsFromGroup = getAllStudents().filter(
-      (student) => student.groupId === group.id,
-    );
-    return { ...group, studentsFromGroup };
-  });
-  return groups;
-};
+// export const getAllGroups = () => {
+//   const groups = groupsModel.getAllGroups().map((group) => {
+//     const studentsFromGroup = getAllStudents().filter(
+//       (student) => student.groupId === group.id,
+//     );
+//     return { ...group, studentsFromGroup };
+//   });
+//   return groups;
+// };
 
-export const getGroupById = (id: string) => {
-  const group = groupsModel.getGroupById(id);
+// export const getGroupById = (id: string) => {
+//   const group = groupsModel.getGroupById(id);
 
-  if (!group) {
-    throw new HttpException(HttpStatuses.NOT_FOUND, 'Group not found');
-  }
+//   if (!group) {
+//     throw new HttpException(HttpStatuses.NOT_FOUND, 'Group not found');
+//   }
 
-  const studentsFromGroup = getAllStudents().filter(
-    (student) => student.groupId === group.id,
-  );
+//   const studentsFromGroup = getAllStudents().filter(
+//     (student) => student.groupId === group.id,
+//   );
 
-  return { ...group, studentsFromGroup };
-};
+//   return { ...group, studentsFromGroup };
+// };
 
 export const createGroup = (createGroupSchema: Omit<IGroup, 'id'>) => {
   return groupsModel.createGroup(createGroupSchema);
