@@ -4,6 +4,7 @@ import { HttpStatuses } from '../application/enums/http-statuses.enum';
 import { ValidatedRequest } from 'express-joi-validation';
 import { IStudentUpdateRequest } from './types/student-update-request.interface';
 import { IStudentCreateRequest } from './types/student-create-request.interface';
+import { IStudentGroupUpdateRequest } from './types/student-group-update-request.interface';
 
 export const getAllStudents = async (request: Request, response: Response) => {
   response.json(await studentsService.getAllStudents());
@@ -32,6 +33,18 @@ export const updateStudentById = async (
     Number(request.params.id),
     request.body,
   );
+  response.status(HttpStatuses.NO_CONTENT).json();
+};
+
+export const addStudentToGroup = async (
+  request: ValidatedRequest<IStudentGroupUpdateRequest>,
+  response: Response,
+) => {
+  await studentsService.addStudentToGroup(
+    Number(request.params.id),
+    request.body,
+  );
+
   response.status(HttpStatuses.NO_CONTENT).json();
 };
 

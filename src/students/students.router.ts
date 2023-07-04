@@ -2,7 +2,11 @@ import { Router } from 'express';
 import * as studentsController from './students.controller';
 import controllerWrapper from '../application/utilities/controller-wrapper';
 import validator from '../application/middlewares/validation.middleware';
-import { studentCreateSchema, studentUpdateSchema } from './student.schema';
+import {
+  addStudentToGroupSchema,
+  studentCreateSchema,
+  studentUpdateSchema,
+} from './student.schema';
 import { idParamSchema } from '../application/schemas/id-param.schema';
 import uploadMiddleware from '../application/middlewares/upload.middleware';
 
@@ -35,11 +39,11 @@ router.delete(
   validator.params(idParamSchema),
   controllerWrapper(studentsController.deleteStudentById),
 );
-// router.patch(
-//   '/:id/addgroup',
-//   validator.params(idParamSchema),
-//   validator.body(studentGroupUpdateSchema),
-//   controllerWrapper(studentsController.updateStudentGroup),
-// );
+router.patch(
+  '/:id/addtogroup',
+  validator.params(idParamSchema),
+  validator.body(addStudentToGroupSchema),
+  controllerWrapper(studentsController.addStudentToGroup),
+);
 
 export default router;

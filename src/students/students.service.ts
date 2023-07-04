@@ -4,19 +4,48 @@ import { IStudent } from './types/student.interface';
 import { AppDataSource } from '../configs/database/data-source';
 import { Student } from './entities/student.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { Group } from '../groups/entities/group.entity';
 
 const studentsRepository = AppDataSource.getRepository(Student);
 
 export const getAllStudents = async (): Promise<IStudent[]> => {
-  return studentsRepository.find({});
+  const students = await studentsRepository
+    .createQueryBuilder('s')
+    .select([
+      's.id as id',
+      's.createdAt as "createdAt"',
+      's.updatedAt as "updatedAt"',
+      's.name as name',
+      's.surname as surname',
+      's.email as email',
+      's.age as age',
+      's.imagePath as "imagePath"',
+    ])
+    .leftJoin('s.group', 'group')
+    .addSelect('group.name as "groupName"')
+    .getRawMany();
+  return students;
 };
 
-export const getStudentById = async (id: number): Promise<IStudent> => {
-  const student = await studentsRepository.findOne({
-    where: {
-      id,
-    },
-  });
+export const getStudentById = async (
+  id: number,
+): Promise<Omit<IStudent, 'groupId'>> => {
+  const student = await studentsRepository
+    .createQueryBuilder('s')
+    .select([
+      's.id as id',
+      's.createdAt as "createdAt"',
+      's.updatedAt as "updatedAt"',
+      's.name as name',
+      's.surname as surname',
+      's.email as email',
+      's.age as age',
+      's.imagePath as "imagePath"',
+    ])
+    .leftJoin('s.group', 'group')
+    .addSelect('group.name as "groupName"')
+    .where('s.id = :id', { id })
+    .getRawOne();
 
   if (!student) {
     throw new HttpException(HttpStatuses.NOT_FOUND, 'Student not found');
@@ -26,7 +55,7 @@ export const getStudentById = async (id: number): Promise<IStudent> => {
 };
 
 export const createStudent = async (
-  createStudentSchema: Omit<IStudent, 'id'>,
+  createStudentSchema: Omit<IStudent, 'id'> & { groupId: number },
 ): Promise<IStudent> => {
   return studentsRepository.save(createStudentSchema);
 };
@@ -36,6 +65,19 @@ export const updateStudentById = async (
   updateStudentSchema: Partial<IStudent>,
 ): Promise<UpdateResult> => {
   const result = await studentsRepository.update(id, updateStudentSchema);
+
+  if (!result.affected) {
+    throw new HttpException(HttpStatuses.NOT_FOUND, 'Student not found');
+  }
+
+  return result;
+};
+
+export const addStudentToGroup = async (
+  id: number,
+  addStudentToGroupSchema: { groupId: number },
+): Promise<UpdateResult> => {
+  const result = await studentsRepository.update(id, addStudentToGroupSchema);
 
   if (!result.affected) {
     throw new HttpException(HttpStatuses.NOT_FOUND, 'Student not found');
