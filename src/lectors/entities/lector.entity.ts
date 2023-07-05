@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, Unique } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, Unique } from 'typeorm';
 import { CoreEntity } from '../../application/entities/core.entity';
 import { Course } from '../../courses/entities/course.entity';
+import { LectorCourse } from '../../lector_course/entities/lectorcourse.entity';
 
 @Entity({ name: 'lectors' })
 @Unique(['email'])
@@ -25,4 +26,7 @@ export class Lector extends CoreEntity {
 
   @ManyToMany(() => Course, (course) => course.lectors)
   courses: Course[];
+
+  @OneToMany(() => LectorCourse, (lectorsCourses) => lectorsCourses.lector)
+  lectorsCourses: LectorCourse[];
 }

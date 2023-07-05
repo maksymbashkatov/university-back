@@ -6,3 +6,11 @@ export const lectorCreateSchema = Joi.object<Omit<ILector, 'id'>>({
   email: Joi.string().required(),
   password: Joi.string().required(),
 });
+
+export const addLectorToCourseCreateSchema = Joi.object<{
+  lectorId: number;
+  courseId: number;
+}>({
+  lectorId: Joi.number().required(),
+  courseId: Joi.number().required(),
+});

@@ -8,6 +8,16 @@ export const getAllCourses = async (request: Request, response: Response) => {
   response.json(await coursesService.getAllCourses());
 };
 
+export const getAllCoursesById = async (
+  request: Request,
+  response: Response,
+) => {
+  const courses = await coursesService.getAllCoursesById(
+    Number(request.params.id),
+  );
+  response.json(courses);
+};
+
 export const createCourse = async (
   request: ValidatedRequest<ICourseCreateRequest>,
   response: Response,
