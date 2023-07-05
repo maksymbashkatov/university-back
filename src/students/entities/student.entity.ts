@@ -1,10 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, Unique } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, Unique } from 'typeorm';
 import { CoreEntity } from '../../application/entities/core.entity';
 import { Group } from '../../groups/entities/group.entity';
 
 @Entity({ name: 'students' })
 @Unique(['email'])
 export class Student extends CoreEntity {
+  @Index('student_name-idx')
   @Column({
     type: 'varchar',
     nullable: false,

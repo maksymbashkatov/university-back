@@ -23,6 +23,7 @@ export const getAllStudents = async (): Promise<IStudent[]> => {
     ])
     .leftJoin('s.group', 'group')
     .addSelect('group.name as "groupName"')
+    .useIndex('student_name-idx')
     .getRawMany();
   return students;
 };
