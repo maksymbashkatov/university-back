@@ -9,7 +9,9 @@ export const getAllCourses = async (): Promise<ICourse[]> => {
   return courses;
 };
 
-export const getAllCoursesById = async (id: number): Promise<ICourse[]> => {
+export const getAllCoursesByLectorId = async (
+  id: number,
+): Promise<ICourse[]> => {
   const courses = await coursesRepository
     .createQueryBuilder('l')
     .leftJoinAndSelect('l.lectorsCourses', 'lc')

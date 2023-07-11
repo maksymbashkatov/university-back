@@ -8,11 +8,11 @@ export const getAllCourses = async (request: Request, response: Response) => {
   response.json(await coursesService.getAllCourses());
 };
 
-export const getAllCoursesById = async (
+export const getAllCoursesByLectorId = async (
   request: Request,
   response: Response,
 ) => {
-  const courses = await coursesService.getAllCoursesById(
+  const courses = await coursesService.getAllCoursesByLectorId(
     Number(request.params.id),
   );
   response.json(courses);

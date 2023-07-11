@@ -11,7 +11,7 @@ router.get('/', controllerWrapper(coursesController.getAllCourses));
 router.get(
   '/:id/all',
   validator.params(idParamSchema),
-  controllerWrapper(coursesController.getAllCoursesById),
+  controllerWrapper(coursesController.getAllCoursesByLectorId),
 );
 router.post(
   '/',

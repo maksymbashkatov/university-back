@@ -8,7 +8,6 @@ import {
   studentUpdateSchema,
 } from './student.schema';
 import { idParamSchema } from '../application/schemas/id-param.schema';
-import uploadMiddleware from '../application/middlewares/upload.middleware';
 
 const router = Router();
 
@@ -29,18 +28,13 @@ router.patch(
   validator.body(studentUpdateSchema),
   controllerWrapper(studentsController.updateStudentById),
 );
-// router.patch(
-//   '/:id/image',
-//   uploadMiddleware.single('file'),
-//   controllerWrapper(studentsController.addImage),
-// );
 router.delete(
   '/:id',
   validator.params(idParamSchema),
   controllerWrapper(studentsController.deleteStudentById),
 );
 router.patch(
-  '/:id/addtogroup',
+  '/:id/add-to-group',
   validator.params(idParamSchema),
   validator.body(addStudentToGroupSchema),
   controllerWrapper(studentsController.addStudentToGroup),
