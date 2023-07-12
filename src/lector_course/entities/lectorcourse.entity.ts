@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { CoreEntity } from '../../application/entities/core.entity';
 import { Lector } from '../../lectors/entities/lector.entity';
 import { Course } from '../../courses/entities/course.entity';
@@ -12,4 +12,10 @@ export class LectorCourse extends CoreEntity {
   @ManyToOne(() => Course, (course) => course.lectorsCourses)
   @JoinColumn({ name: 'course_id' })
   course: Course;
+
+  @PrimaryColumn({ name: 'lector_id' })
+  public lectorId: number;
+
+  @PrimaryColumn({ name: 'course_id' })
+  public courseId: number;
 }
