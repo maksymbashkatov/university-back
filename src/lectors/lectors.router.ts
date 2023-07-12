@@ -22,7 +22,7 @@ router.post(
   controllerWrapper(lectorsController.createLector),
 );
 router.post(
-  '/addtocourse',
+  '/add-to-course',
   validator.body(addLectorToCourseCreateSchema),
   controllerWrapper(lectorsController.addLectorToCourse),
 );
