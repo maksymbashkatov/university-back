@@ -9,7 +9,7 @@ const router = Router();
 
 router.get('/', controllerWrapper(coursesController.getAllCourses));
 router.get(
-  '/:id/all',
+  '/get-all-by-lector/:id',
   validator.params(idParamSchema),
   controllerWrapper(coursesController.getAllCoursesByLectorId),
 );

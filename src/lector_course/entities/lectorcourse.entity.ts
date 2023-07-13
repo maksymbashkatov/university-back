@@ -14,8 +14,8 @@ export class LectorCourse extends CoreEntity {
   course: Course;
 
   @PrimaryColumn({ name: 'lector_id' })
-  public lectorId: number;
+  lectorId: number;
 
   @PrimaryColumn({ name: 'course_id' })
-  public courseId: number;
+  courseId: number;
 }

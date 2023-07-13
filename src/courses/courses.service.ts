@@ -13,11 +13,18 @@ export const getAllCoursesByLectorId = async (
   id: number,
 ): Promise<ICourse[]> => {
   const courses = await coursesRepository
-    .createQueryBuilder('l')
-    .leftJoinAndSelect('l.lectorsCourses', 'lc')
-    .leftJoinAndSelect('lc.course', 'c')
-    .where('l.id = :id', { id })
-    .getMany();
+    .createQueryBuilder('c')
+    .select([
+      'c.id as id',
+      'c.createdAt as "createdAt"',
+      'c.updatedAt as "updatedAt"',
+      'c.name as name',
+      'c.description as description',
+      'c.hours as hours',
+    ])
+    .leftJoin('c.lectorsCourses', 'lc')
+    .where('lc.lectorId = :id', { id })
+    .getRawMany();
 
   return courses;
 };
