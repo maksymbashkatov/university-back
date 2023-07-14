@@ -1,66 +1,59 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import * as studentsService from './students.service';
 import { HttpStatuses } from '../application/enums/http-statuses.enum';
 import { ValidatedRequest } from 'express-joi-validation';
 import { IStudentUpdateRequest } from './types/student-update-request.interface';
 import { IStudentCreateRequest } from './types/student-create-request.interface';
+import { IStudentGroupUpdateRequest } from './types/student-group-update-request.interface';
 
-export const getAllStudents = (request: Request, response: Response) => {
-  response.json(studentsService.getAllStudents());
+export const getAllStudents = async (request: Request, response: Response) => {
+  response.json(
+    await studentsService.getAllStudents(String(request.query.name)),
+  );
 };
 
-export const getStudentById = (
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) => {
-  const student = studentsService.getStudentById(request.params.id);
+export const getStudentById = async (request: Request, response: Response) => {
+  const student = await studentsService.getStudentById(
+    Number(request.params.id),
+  );
   response.json(student);
 };
 
-export const createStudent = (
+export const createStudent = async (
   request: ValidatedRequest<IStudentCreateRequest>,
   response: Response,
 ) => {
-  const student = studentsService.createStudent(request.body);
-  student.imagePath = null;
-  student.groupId = student.groupId ?? null;
+  const student = await studentsService.createStudent(request.body);
   response.status(HttpStatuses.CREATED).json(student);
 };
 
-export const updateStudentById = (
+export const updateStudentById = async (
   request: ValidatedRequest<IStudentUpdateRequest>,
   response: Response,
 ) => {
-  const student = studentsService.updateStudentById(
-    request.params.id,
+  await studentsService.updateStudentById(
+    Number(request.params.id),
     request.body,
   );
-  response.json(student);
+  response.status(HttpStatuses.NO_CONTENT).json();
 };
 
-export const addImage = (
-  request: Request<{ id: string; file: Express.Multer.File }>,
+export const addStudentToGroup = async (
+  request: ValidatedRequest<IStudentGroupUpdateRequest>,
   response: Response,
 ) => {
-  const { id } = request.params;
-  const { path } = request.file ?? {};
-  const student = studentsService.addImage(id, path);
-  response.json(student);
-};
-
-export const deleteStudentById = (request: Request, response: Response) => {
-  const student = studentsService.deleteStudentById(request.params.id);
-  response.json(student);
-};
-
-export const updateStudentGroup = (
-  request: ValidatedRequest<IStudentUpdateRequest>,
-  response: Response,
-) => {
-  const student = studentsService.updateStudentGroup(
-    request.params.id,
+  await studentsService.addStudentToGroup(
+    Number(request.params.id),
     request.body,
   );
-  response.json(student);
+
+  response.status(HttpStatuses.NO_CONTENT).json();
+};
+
+export const deleteStudentById = async (
+  request: Request,
+  response: Response,
+) => {
+  await studentsService.deleteStudentById(Number(request.params.id));
+  response.status(HttpStatuses.NO_CONTENT).json();
 };

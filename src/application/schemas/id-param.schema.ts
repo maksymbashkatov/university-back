@@ -1,5 +1,5 @@
 import Joi from 'joi';
 
-export const idParamSchema = Joi.object<{ id: string }>({
-  id: Joi.string().hex().length(24).required(),
+export const idParamSchema = Joi.object<{ id: number }>({
+  id: Joi.number().required(),
 });

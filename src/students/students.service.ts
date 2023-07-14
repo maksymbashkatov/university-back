@@ -1,90 +1,100 @@
-import ObjectID from 'bson-objectid';
 import { HttpStatuses } from '../application/enums/http-statuses.enum';
 import HttpException from '../application/exceptions/http-exception';
-import * as studentsModel from './students.model';
 import { IStudent } from './types/student.interface';
-import path from 'path';
-import fs from 'fs/promises';
-import { getAllGroups } from '../groups/groups.model';
+import { AppDataSource } from '../configs/database/data-source';
+import { Student } from './entities/student.entity';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
-export const getAllStudents = () => {
-  const students = studentsModel.getAllStudents().map((student) => {
-    const groupName =
-      getAllGroups().find((group) => group.id === student.groupId)?.name ??
-      null;
-    return { ...student, groupName };
-  });
-  return students;
+const studentsRepository = AppDataSource.getRepository(Student);
+
+export const getAllStudents = async (name: string): Promise<IStudent[]> => {
+  const students = await studentsRepository
+    .createQueryBuilder('s')
+    .select([
+      's.id as id',
+      's.createdAt as "createdAt"',
+      's.updatedAt as "updatedAt"',
+      's.name as name',
+      's.surname as surname',
+      's.email as email',
+      's.age as age',
+      's.imagePath as "imagePath"',
+    ])
+    .leftJoin('s.group', 'group')
+    .addSelect('group.name as "groupName"')
+    .useIndex('student_name-idx');
+  if (name && name !== 'undefined') {
+    students.where('s.name = :name', { name });
+  }
+  const studentsByName = await students.getRawMany();
+  return studentsByName;
 };
 
-export const getStudentById = (id: string) => {
-  const student = studentsModel.getStudentById(id);
+export const getStudentById = async (
+  id: number,
+): Promise<Omit<IStudent, 'groupId'>> => {
+  const student = await studentsRepository
+    .createQueryBuilder('s')
+    .select([
+      's.id as id',
+      's.createdAt as "createdAt"',
+      's.updatedAt as "updatedAt"',
+      's.name as name',
+      's.surname as surname',
+      's.email as email',
+      's.age as age',
+      's.imagePath as "imagePath"',
+    ])
+    .leftJoin('s.group', 'group')
+    .addSelect('group.name as "groupName"')
+    .where('s.id = :id', { id })
+    .getRawOne();
 
   if (!student) {
     throw new HttpException(HttpStatuses.NOT_FOUND, 'Student not found');
   }
 
-  const groupName =
-    getAllGroups().find((group) => group.id === student.groupId)?.name ?? null;
-
-  return { ...student, groupName };
+  return student;
 };
 
-export const createStudent = (createStudentSchema: Omit<IStudent, 'id'>) => {
-  return studentsModel.createStudent(createStudentSchema);
+export const createStudent = async (
+  createStudentSchema: Omit<IStudent, 'id'> & { groupId: number },
+): Promise<IStudent> => {
+  return studentsRepository.save(createStudentSchema);
 };
 
-export const updateStudentById = (
-  id: string,
+export const updateStudentById = async (
+  id: number,
   updateStudentSchema: Partial<IStudent>,
-) => {
-  const student = studentsModel.getStudentById(id);
+): Promise<UpdateResult> => {
+  const result = await studentsRepository.update(id, updateStudentSchema);
 
-  if (!student) {
+  if (!result.affected) {
     throw new HttpException(HttpStatuses.NOT_FOUND, 'Student not found');
   }
 
-  return studentsModel.updateStudentById(id, updateStudentSchema);
+  return result;
 };
 
-export const addImage = async (id: string, filePath?: string) => {
-  if (!filePath) {
-    throw new HttpException(HttpStatuses.BAD_REQUEST, 'File is not provided');
+export const addStudentToGroup = async (
+  id: number,
+  addStudentToGroupSchema: { groupId: number },
+): Promise<UpdateResult> => {
+  const result = await studentsRepository.update(id, addStudentToGroupSchema);
+
+  if (!result.affected) {
+    throw new HttpException(HttpStatuses.NOT_FOUND, 'Student not found');
   }
 
-  try {
-    const imageId = ObjectID().toHexString();
-    const imageExtension = path.extname(filePath);
-    const imageName = imageId + imageExtension;
+  return result;
+};
 
-    const studentsDirectoryName = 'students';
-    const studentsDirectoryPath = path.join(
-      __dirname,
-      '../',
-      'public',
-      studentsDirectoryName,
-    );
-    const newImagePath = path.join(studentsDirectoryPath, imageName);
-    const imagePath = `${studentsDirectoryName}/${imageName}`;
+export const deleteStudentById = async (id: number): Promise<DeleteResult> => {
+  const result = await studentsRepository.delete(id);
 
-    await fs.rename(filePath, newImagePath);
-
-    const updatedStudent = updateStudentById(id, { imagePath });
-
-    return updatedStudent;
-  } catch (error) {
-    await fs.unlink(filePath);
-    throw error;
+  if (!result.affected) {
+    throw new HttpException(HttpStatuses.NOT_FOUND, 'Student not found');
   }
-};
 
-export const deleteStudentById = (id: string) => {
-  return studentsModel.deleteStudentById(id);
-};
-
-export const updateStudentGroup = (
-  id: string,
-  updateStudentSchema: Partial<IStudent>,
-) => {
-  return studentsModel.updateStudentGroup(id, updateStudentSchema);
+  return result;
 };

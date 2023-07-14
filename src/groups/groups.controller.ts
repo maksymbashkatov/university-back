@@ -5,30 +5,34 @@ import { IGroupCreateRequest } from './types/group-create-request.interface';
 import { IGroupUpdateRequest } from './types/group-update-request.interface';
 import { HttpStatuses } from '../application/enums/http-statuses.enum';
 
-export const getAllGroups = (request: Request, response: Response) => {
-  response.json(groupsService.getAllGroups());
+export const getAllGroups = async (request: Request, response: Response) => {
+  response.json(await groupsService.getAllGroups());
 };
 
-export const getGroupById = (request: Request, response: Response) => {
-  response.json(groupsService.getGroupById(request.params.id));
+export const getGroupById = async (request: Request, response: Response) => {
+  response.json(await groupsService.getGroupById(Number(request.params.id)));
 };
 
-export const createGroup = (
+export const createGroup = async (
   request: ValidatedRequest<IGroupCreateRequest>,
   response: Response,
 ) => {
-  const student = groupsService.createGroup(request.body);
-  response.status(HttpStatuses.CREATED).json(student);
+  const group = await groupsService.createGroup(request.body);
+
+  response.status(HttpStatuses.CREATED).json(group);
 };
 
-export const updateGroupById = (
+export const updateGroupById = async (
   request: ValidatedRequest<IGroupUpdateRequest>,
   response: Response,
 ) => {
-  const group = groupsService.updateGroupById(request.params.id, request.body);
-  response.json(group);
+  await groupsService.updateGroupById(request.params.id, request.body);
+
+  response.status(HttpStatuses.NO_CONTENT).json();
 };
 
-export const deleteGroupById = (request: Request, response: Response) => {
-  response.json(groupsService.deleteGroupById(request.params.id));
+export const deleteGroupById = async (request: Request, response: Response) => {
+  await groupsService.deleteGroupById(Number(request.params.id));
+
+  response.status(HttpStatuses.NO_CONTENT).json();
 };
