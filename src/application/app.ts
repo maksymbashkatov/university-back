@@ -9,6 +9,7 @@ import groupsRouter from '../groups/groups.router';
 import { AppDataSource } from '../configs/database/data-source';
 import lectorsRouter from '../lectors/lectors.router';
 import coursesRouter from '../courses/courses.router';
+import marksRouter from '../marks/marks.router';
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use('/api/v1/students', studentsRouter);
 app.use('/api/v1/groups', groupsRouter);
 app.use('/api/v1/lectors', lectorsRouter);
 app.use('/api/v1/courses', coursesRouter);
+app.use('/api/v1/marks', marksRouter);
 
 // Должен быть последним вызваным, чтобы ловить все ошибки во всех предыдущих Middleware и Controlers
 app.use(exceptionFilter);

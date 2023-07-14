@@ -1,6 +1,15 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, Unique } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  Unique,
+} from 'typeorm';
 import { CoreEntity } from '../../application/entities/core.entity';
 import { Group } from '../../groups/entities/group.entity';
+import { Mark } from '../../marks/entities/mark.entity';
 
 @Entity({ name: 'students' })
 @Unique(['email'])
@@ -50,4 +59,7 @@ export class Student extends CoreEntity {
     name: 'group_id',
   })
   groupId: number;
+
+  @OneToMany(() => Mark, (mark) => mark.course)
+  marks: Mark[];
 }

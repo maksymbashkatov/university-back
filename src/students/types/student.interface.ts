@@ -5,5 +5,4 @@ export interface IStudent {
   email: string;
   age: number;
   imagePath: string;
-  // groupId: string | null;
 }

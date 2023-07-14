@@ -9,6 +9,7 @@ import {
 import { CoreEntity } from '../../application/entities/core.entity';
 import { Lector } from '../../lectors/entities/lector.entity';
 import { LectorCourse } from '../../lector_course/entities/lectorcourse.entity';
+import { Mark } from '../../marks/entities/mark.entity';
 
 @Entity({ name: 'courses' })
 @Unique(['name'])
@@ -36,4 +37,7 @@ export class Course extends CoreEntity {
 
   @OneToMany(() => LectorCourse, (lectorsCourses) => lectorsCourses.course)
   lectorsCourses: LectorCourse[];
+
+  @OneToMany(() => Mark, (mark) => mark.course)
+  marks: Mark[];
 }
