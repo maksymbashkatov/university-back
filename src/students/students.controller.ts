@@ -7,7 +7,6 @@ import { IStudentCreateRequest } from './types/student-create-request.interface'
 import { IStudentGroupUpdateRequest } from './types/student-group-update-request.interface';
 
 export const getAllStudents = async (request: Request, response: Response) => {
-  // console.log('XXX', typeof request.query.name);
   response.json(
     await studentsService.getAllStudents(String(request.query.name)),
   );
