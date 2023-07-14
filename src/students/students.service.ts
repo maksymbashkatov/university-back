@@ -4,11 +4,10 @@ import { IStudent } from './types/student.interface';
 import { AppDataSource } from '../configs/database/data-source';
 import { Student } from './entities/student.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { Group } from '../groups/entities/group.entity';
 
 const studentsRepository = AppDataSource.getRepository(Student);
 
-export const getAllStudents = async (): Promise<IStudent[]> => {
+export const getAllStudents = async (name: string): Promise<IStudent[]> => {
   const students = await studentsRepository
     .createQueryBuilder('s')
     .select([
@@ -23,9 +22,12 @@ export const getAllStudents = async (): Promise<IStudent[]> => {
     ])
     .leftJoin('s.group', 'group')
     .addSelect('group.name as "groupName"')
-    .useIndex('student_name-idx')
-    .getRawMany();
-  return students;
+    .useIndex('student_name-idx');
+  if (name && name !== 'undefined') {
+    students.where('s.name = :name', { name });
+  }
+  const studentsByName = await students.getRawMany();
+  return studentsByName;
 };
 
 export const getStudentById = async (
