@@ -10,12 +10,38 @@ import { AppDataSource } from '../configs/database/data-source';
 import lectorsRouter from '../lectors/lectors.router';
 import coursesRouter from '../courses/courses.router';
 import marksRouter from '../marks/marks.router';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(logger);
+
+const options = {
+  definition: {
+    openapi: '3.1.0',
+    info: {
+      title: 'University API with Swagger',
+      version: '0.1.0',
+      description: 'University API',
+      license: {
+        name: 'MIT',
+        url: 'https://spdx.org/licenses/MIT.html',
+      },
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+      },
+    ],
+  },
+  apis: ['./**/*.routes/*.ts'],
+};
+
+const specs = swaggerJsdoc(options);
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 AppDataSource.initialize()
   .then(() => {
