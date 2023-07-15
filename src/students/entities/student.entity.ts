@@ -34,7 +34,7 @@ export class Student extends CoreEntity {
   email: string;
 
   @Column({
-    type: 'numeric',
+    type: 'smallint',
     nullable: true,
   })
   age: number;

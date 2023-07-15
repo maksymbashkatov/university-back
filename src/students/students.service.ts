@@ -4,10 +4,13 @@ import { IStudent } from './types/student.interface';
 import { AppDataSource } from '../configs/database/data-source';
 import { Student } from './entities/student.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { IStudentGetResponse } from './types/student-get-response.interface';
 
 const studentsRepository = AppDataSource.getRepository(Student);
 
-export const getAllStudents = async (name: string): Promise<IStudent[]> => {
+export const getAllStudents = async (
+  name: string,
+): Promise<IStudentGetResponse[]> => {
   const students = await studentsRepository
     .createQueryBuilder('s')
     .select([
@@ -32,7 +35,7 @@ export const getAllStudents = async (name: string): Promise<IStudent[]> => {
 
 export const getStudentById = async (
   id: number,
-): Promise<Omit<IStudent, 'groupId'>> => {
+): Promise<IStudentGetResponse> => {
   const student = await studentsRepository
     .createQueryBuilder('s')
     .select([
