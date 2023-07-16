@@ -12,6 +12,7 @@ import coursesRouter from '../courses/courses.router';
 import marksRouter from '../marks/marks.router';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import postsRouter from '../posts/posts.router';
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use('/api/v1/groups', groupsRouter);
 app.use('/api/v1/lectors', lectorsRouter);
 app.use('/api/v1/courses', coursesRouter);
 app.use('/api/v1/marks', marksRouter);
+app.use('/api/v1/posts', postsRouter);
 
 // Должен быть последним вызваным, чтобы ловить все ошибки во всех предыдущих Middleware и Controlers
 app.use(exceptionFilter);
