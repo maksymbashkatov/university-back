@@ -48,7 +48,7 @@ router.get('/', controllerWrapper(groupsController.getAllGroups));
  *         description: Group id
  *     responses:
  *       200:
- *         description: The list of groups.
+ *         description: The group was got
  *         content:
  *           application/json:
  *             schema:
