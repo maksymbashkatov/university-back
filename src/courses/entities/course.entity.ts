@@ -27,7 +27,7 @@ export class Course extends CoreEntity {
   description: string;
 
   @Column({
-    type: 'numeric',
+    type: 'smallint',
     nullable: true,
   })
   hours: number;
