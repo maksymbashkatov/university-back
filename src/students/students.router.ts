@@ -59,7 +59,7 @@ router.get('/', controllerWrapper(studentsController.getAllStudents));
  *         description: Student id
  *     responses:
  *       200:
- *         description: The list of students.
+ *         description: The student was got
  *         content:
  *           application/json:
  *             schema:

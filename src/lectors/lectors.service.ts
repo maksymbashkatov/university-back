@@ -2,6 +2,7 @@ import { HttpStatuses } from '../application/enums/http-statuses.enum';
 import HttpException from '../application/exceptions/http-exception';
 import { AppDataSource } from '../configs/database/data-source';
 import { Course } from '../courses/entities/course.entity';
+import { ICourse } from '../courses/types/course.interface';
 import { LectorCourse } from '../lector_course/entities/lectorcourse.entity';
 import { ILectorCourse } from '../lector_course/types/lectorcourse.interface';
 import { Lector } from './entities/lector.entity';
@@ -16,19 +17,30 @@ export const getAllLectors = async (): Promise<ILector[]> => {
   return lectors;
 };
 
-export const getLectorById = async (id: number): Promise<ILector> => {
-  const lector = await lectorsRepository
-    .createQueryBuilder('l')
-    .leftJoinAndSelect('l.lectorsCourses', 'lc')
-    .leftJoinAndSelect('lc.course', 'c')
-    .where('l.id = :id', { id })
-    .getOne();
+export const getLectorById = async (
+  id: number,
+): Promise<ILector & { courses: ICourse[] }> => {
+  const lector = await lectorsRepository.findOneBy({ id: id });
 
   if (!lector) {
     throw new HttpException(HttpStatuses.NOT_FOUND, 'Lector not found');
   }
 
-  return lector;
+  const courses = await coursesRepository
+    .createQueryBuilder('c')
+    .select([
+      'c.id as id',
+      'c.createdAt as createdAt',
+      'c.updatedAt as updatedAt',
+      'c.name as name',
+      'c.description as description',
+      'c.hours as hours',
+    ])
+    .leftJoin('c.lectorsCourses', 'lc')
+    .where('lc.lector.id = :id', { id })
+    .getRawMany();
+
+  return { ...lector, courses };
 };
 
 export const createLector = async (
