@@ -18,13 +18,13 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(logger);
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('Typeorm connected to database');
-  })
-  .catch((error) => {
-    console.log('Error: ', error);
-  });
+// AppDataSource.initialize()
+//   .then(() => {
+//     console.log('Typeorm connected to database');
+//   })
+//   .catch((error) => {
+//     console.log('Error: ', error);
+//   });
 
 const staticFilesPath = path.join(__dirname, '../', 'public');
 
