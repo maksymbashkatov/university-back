@@ -56,3 +56,11 @@ export const deletePostById = async (id: number): Promise<DeleteResult> => {
 
   return result;
 };
+
+export const deletePostByIdForUnitTest = async (
+  id: number,
+): Promise<DeleteResult> => {
+  const result = await postsRepository.delete(id);
+
+  return result;
+};

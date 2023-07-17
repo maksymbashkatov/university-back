@@ -68,6 +68,7 @@
     ],
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
-    }
+    },
+    "restoreMocks": true
   }
 }
