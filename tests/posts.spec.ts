@@ -114,21 +114,82 @@ describe('/posts', () => {
     });
 
     it('returns 400 status if post id not valid', async () => {
-      const response = await request(app)
-        .get('/api/v1/posts/notValidId')
-        .expect(400);
+      await request(app).get('/api/v1/posts/notValidId').expect(400);
     });
 
-    it('returns 404 status if post not found', async () => {
+    it('returns 404 status if post created, but enter id for not exist post', async () => {
       const { body: post } = await request(app)
         .post('/api/v1/posts')
         .send({ title: 'Title1', description: 'Description1' })
         .expect(201);
       console.log(post);
 
-      const response = await request(app)
+      await request(app)
         .get(`/api/v1/posts/${post.id + 1}`)
         .expect(404);
+    });
+
+    it('returns 404 status if post not found', async () => {
+      await request(app).get(`/api/v1/posts/0`).expect(404);
+    });
+  });
+
+  describe('PATCH /posts', () => {
+    it('returns 404 status if post not found', async () => {
+      await request(app).patch(`/api/v1/posts/0`).expect(404);
+    });
+
+    it('returns 204 status if post correct updated', async () => {
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title1', description: 'Description1' })
+        .expect(201);
+
+      await request(app)
+        .patch(`/api/v1/posts/${response.body.id}`)
+        .send({ title: 'Title11', description: 'Description100' })
+        .expect(204);
+    });
+
+    it('returns 400 status if title is not valid', async () => {
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title1', description: 'Description1' })
+        .expect(201);
+
+      await request(app)
+        .patch(`/api/v1/posts/${response.body.id}`)
+        .send({ title: 100 })
+        .expect(400);
+    });
+
+    it('returns 400 status if description is not valid', async () => {
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title1', description: 'Description1' })
+        .expect(201);
+
+      await request(app)
+        .patch(`/api/v1/posts/${response.body.id}`)
+        .send({ description: 101 })
+        .expect(400);
+    });
+  });
+
+  describe('DELETE /posts', () => {
+    it('returns 404 status if post not found', async () => {
+      await request(app).delete(`/api/v1/posts/0`).expect(404);
+    });
+
+    it('returns 204 status if post correct deleted', async () => {
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title1', description: 'Description1' })
+        .expect(201);
+
+      await request(app)
+        .delete(`/api/v1/posts/${response.body.id}`)
+        .expect(204);
     });
   });
 });
