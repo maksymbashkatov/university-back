@@ -1,7 +1,103 @@
+import 'dotenv/config';
+import { AppDataSource } from '../src/configs/database/data-source';
+import { Post } from '../src/posts/entities/post.entity';
+import request from 'supertest';
+import app from '../src/application/app';
+import { DataSource } from 'typeorm';
+
+let dataSource: DataSource;
+const postRepository = AppDataSource.getRepository(Post);
+
+beforeAll(async () => {
+  dataSource = await AppDataSource.initialize();
+});
+
+beforeEach(async () => {
+  postRepository.clear();
+});
+
+afterAll(async () => {
+  await dataSource.destroy();
+});
+
 describe('/posts', () => {
   describe('POST /posts', () => {
     it('returns 400 status if title is not passed', async () => {
-      expect(1).toEqual(1);
+      await request(app)
+        .post('/api/v1/posts')
+        .send({ description: 'Description1' })
+        .expect(400);
+    });
+
+    it('returns 400 status if description is not passed', async () => {
+      await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title1' })
+        .expect(400);
+    });
+
+    it('saves post', async () => {
+      const title = 'Title1';
+      const description = 'Description1';
+
+      await request(app)
+        .post('/api/v1/posts')
+        .send({ title, description })
+        .expect(201);
+
+      const posts = await postRepository.find();
+      console.log(posts);
+
+      expect(posts.length).toEqual(1);
+
+      expect(posts[0]).toMatchObject({
+        title,
+        description,
+      });
+    });
+
+    it('returns created post', async () => {
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title2', description: 'Description2' })
+        .expect(201);
+
+      const posts = await postRepository.find();
+
+      expect(posts.length).toEqual(1);
+
+      const { id, createdAt, updatedAt, title, description } = posts[0];
+
+      expect(response.body).toEqual({
+        id,
+        createdAt: createdAt.toISOString(),
+        updatedAt: updatedAt.toISOString(),
+        title,
+        description,
+      });
+    });
+  });
+  describe('GET /posts', () => {
+    it('returns an empty list if no posts', async () => {
+      const response = await request(app).get('/api/v1/posts').expect(200);
+
+      expect(response.body).toEqual([]);
+    });
+
+    it('returns all saved posts', async () => {
+      const { body: firstPost } = await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title1', description: 'Description1' })
+        .expect(201);
+
+      const { body: secondPost } = await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title2', description: 'Description2' })
+        .expect(201);
+
+      const response = await request(app).get('/api/v1/posts').expect(200);
+
+      expect(response.body).toEqual([firstPost, secondPost]);
     });
   });
 });
