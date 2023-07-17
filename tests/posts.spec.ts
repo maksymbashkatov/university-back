@@ -40,13 +40,13 @@ describe('/posts', () => {
       const title = 'Title1';
       const description = 'Description1';
 
-      await request(app)
+      const response = await request(app)
         .post('/api/v1/posts')
         .send({ title, description })
         .expect(201);
 
+      await postRepository.save(response.body);
       const posts = await postRepository.find();
-      console.log(posts);
 
       expect(posts.length).toEqual(1);
 
@@ -98,6 +98,37 @@ describe('/posts', () => {
       const response = await request(app).get('/api/v1/posts').expect(200);
 
       expect(response.body).toEqual([firstPost, secondPost]);
+    });
+
+    it('returns one saved post by id', async () => {
+      const { body: post } = await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title1', description: 'Description1' })
+        .expect(201);
+
+      const response = await request(app)
+        .get(`/api/v1/posts/${post.id}`)
+        .expect(200);
+
+      expect(response.body.id).toEqual(post.id);
+    });
+
+    it('returns 400 status if post id not valid', async () => {
+      const response = await request(app)
+        .get('/api/v1/posts/notValidId')
+        .expect(400);
+    });
+
+    it('returns 404 status if post not found', async () => {
+      const { body: post } = await request(app)
+        .post('/api/v1/posts')
+        .send({ title: 'Title1', description: 'Description1' })
+        .expect(201);
+      console.log(post);
+
+      const response = await request(app)
+        .get(`/api/v1/posts/${post.id + 1}`)
+        .expect(404);
     });
   });
 });
