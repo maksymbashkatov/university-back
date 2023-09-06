@@ -7,6 +7,7 @@ export const databaseConfiguration = (
   const n_e = process.env.NODE_ENV;
   const file_extension =
     n_e === 'production' ? 'js' : n_e === 'development' ? 'ts' : '';
+  // const file_extension = 'ts';
   const migrationsPath = `${ROOT_PATH}/src/**/migrations/*.${file_extension}`;
   const entitiesPath = `${ROOT_PATH}/src/**/*.entity.${file_extension}`;
 
