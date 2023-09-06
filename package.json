@@ -57,7 +57,6 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "supertest": "^6.3.3",
-    "typeorm": "^0.3.17",
     "win-node-env": "^0.6.1"
   },
   "jest": {
