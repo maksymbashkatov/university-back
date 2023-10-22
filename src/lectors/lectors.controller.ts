@@ -6,7 +6,8 @@ import { ILectorCreateRequest } from './types/lector-create-request.interface';
 import { ILectorCourseCreateRequest } from '../lector_course/types/lectorcourse-create-request.interface';
 
 export const getAllLectors = async (request: Request, response: Response) => {
-  response.json(await lectorsService.getAllLectors());
+  const lectors = await lectorsService.getAllLectors();
+  response.json({ result: lectors });
 };
 
 export const getLectorById = async (request: Request, response: Response) => {
