@@ -5,7 +5,8 @@ import * as coursesService from './courses.service';
 import { ICourseCreateRequest } from './types/course-create-request.interface';
 
 export const getAllCourses = async (request: Request, response: Response) => {
-  response.json(await coursesService.getAllCourses());
+  const courses = await coursesService.getAllCourses();
+  response.json({ result: courses });
 };
 
 export const getAllCoursesByLectorId = async (

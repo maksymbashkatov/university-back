@@ -6,7 +6,8 @@ import { IGroupUpdateRequest } from './types/group-update-request.interface';
 import { HttpStatuses } from '../application/enums/http-statuses.enum';
 
 export const getAllGroups = async (request: Request, response: Response) => {
-  response.json(await groupsService.getAllGroups());
+  const groups = await groupsService.getAllGroups();
+  response.json({ result: groups });
 };
 
 export const getGroupById = async (request: Request, response: Response) => {
